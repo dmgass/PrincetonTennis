@@ -241,8 +241,8 @@ for week in schedule.weeks:
         matches.append([week.date, court, (player1.name, None), (player2.name, None)])
     matches.append([week.date, "off", week.get_players_off(schedule.players)])
 
-with open(f"x_unreported_matches_{args.group}.py", "w") as handle:
+with open(f"unreported_matches_{args.group}.py", "w") as handle:
     pprint.pprint(matches, handle)
 
-with open(f"x_reported_matches_{args.group}.py", "w") as handle:
+with open(f"reported_matches_{args.group}.py", "w") as handle:
     handle.write('[]')
