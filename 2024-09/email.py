@@ -6,7 +6,7 @@ SEASON = '2024-09'
 
 STYLE = 'style="border: 1px solid black"'
 
-MEMBERS = json.load(open("members.json"))
+MEMBERS = json.load(open("../members.json"))
 
 PLAYOFFS = ["12/18"]
 
@@ -281,6 +281,10 @@ contact_info = [
     for player in PLAYERS.values()
 ]
 
+print(f"Princeton Wednesday {args.group} Tennis Standings/Matches")
+print()
+print()
+
 if args.html:
     if unreported_matches:
         print("<h2>Unreported Matches</h2>")
@@ -300,10 +304,6 @@ if args.html:
     print("<br/>\n".join(contact_info))
 
 else:
-    print(f"Subject: Princeton Wednesday {args.group} Tennis Standings/Matches")
-    print()
-    print()
-
     print("Unreported Matches")
     print("==================")
     for line in unreported_matches:

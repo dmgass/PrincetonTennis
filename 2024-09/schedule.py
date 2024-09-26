@@ -1,12 +1,9 @@
+import argparse
 import json
 import operator
 import pprint
 import random
 from texttable import Texttable
-
-seed = 3
-
-GROUP = "4.0"
 
 SEASON = "2024-09"
 
@@ -106,11 +103,9 @@ class Week:
 
     def get_players_off(self, players):
         return ", ".join(sorted(
-            set(p.nickname for p in players.values()) -
-            set(p.nickname for p in self.players_scheduled)
+            set(p.name for p in players.values()) -
+            set(p.name for p in self.players_scheduled)
         ))
-
-
 
 
 class Schedule:
@@ -118,7 +113,7 @@ class Schedule:
     def __init__(self):
         self.players = Players()
 
-        for name, info in json.load(open("members.json")).items():
+        for name, info in json.load(open("../members.json")).items():
             seasons = info['group']
 
             try:
@@ -126,7 +121,7 @@ class Schedule:
             except KeyError:
                 continue
 
-            if group == GROUP:
+            if group == args.group:
                 self.players.add(name, info["nickname"])
 
         for date, names in OFF.items():
@@ -142,9 +137,9 @@ class Schedule:
 
         self.weeks = []
         for date, courts in WEEKS.items():
-            self.weeks.append(Week(date, courts[GROUP]))
+            self.weeks.append(Week(date, courts[args.group]))
 
-        prescheduled = PRESCHEDULED[GROUP]
+        prescheduled = PRESCHEDULED[args.group]
 
         for week in self.weeks:
             try:
@@ -201,7 +196,7 @@ class Schedule:
 
         courts = set()
         for _date, week_courts in WEEKS.items():
-            for court in week_courts[GROUP]:
+            for court in week_courts[args.group]:
                 courts.add(court)
 
         table = Texttable()
@@ -214,64 +209,12 @@ class Schedule:
         lines += [table.draw()]
         return "\n".join(lines)
 
-    @property
-    def as_html(self):
-        lines = []
+parser = argparse.ArgumentParser()
+parser.add_argument("group", choices=["3.5", "4.0"])
+parser.add_argument("--seed", default=0)
+args = parser.parse_args()
 
-        # lines += ['<table style="border: 1px solid black">']
-        # for player in players:
-        #     row_cells = [
-        #         f"<td {STYLE}>{player.nickname}</td>",
-        #         f"<td {STYLE}>{player.name}</td>",
-        #         ]
-        #     lines += [f"<tr>{''.join(row_cells)}<tr/>"]
-        # lines += ["</table>"]
-        # lines += ["<br/>"]
-
-        for player in players:
-            lines += [f"{player.nickname}: {player.name} {player.telephone}<br/>"]
-        lines += ["<br/>"]
-
-        lines += ['<table style="border: 1px solid black">']
-        row_cells = [f"<th {STYLE}>Week</th>"]
-        row_cells += [f"<th {STYLE}>{cell}</th>" for cell in courts]
-        row_cells += [f"<th {STYLE}>Off</th>"]
-        lines += [f"<tr>{''.join(row_cells)}<tr/>"]
-
-        for week in self.weeks:
-            row_cells = [f"<th {STYLE}>{week.date}</th>"]
-            for p1, p2 in week.matches:
-                if p1.nickname > p2.nickname:
-                    p1, p2 = p2, p1
-                row_cells += [f"<td {STYLE}>{p1.nickname} v {p2.nickname}</td>"]
-            row_cells += [f"<td {STYLE}>{week.get_players_off(self.players)}</td>"]
-            lines += [f"<tr>{''.join(row_cells)}<tr/>"]
-
-        if args.playoffs:
-            row_cells = [f"<th {STYLE}>{args.playoffs}</th>"]
-            row_cells += [f"<td {STYLE}>TBD</td>"] * (len(courts) + 1)
-            lines += [f"<tr>{''.join(row_cells)}<tr/>"]
-
-        lines += ["</table>"]
-        return "\n".join(lines)
-
-    @property
-    def as_code(self):
-        lines = ["PLAYERS = ["]
-        for player in players:
-            lines += [f'    {player.varname} := Player("{player.name}", "{player.nickname}", "{player.telephone}"),']
-        lines += ["]", ""]
-
-        lines += ["SEASON = {"]
-        for week in self.weeks:
-            lines += [f'    "{week.date}": ' + "{"]
-            for court, (p1, p2) in zip(courts, week.matches):
-                if p1.name > p2.name:
-                    p1, p2 = p2, p1
-                lines += [f'        "{court}": {{{p1.varname}: None, {p2.varname}: None}},']
-            lines += ["    },"]
-        lines += ["}"]
-        return "\n".join(lines)
+seed = args.seed
 
 while 1:
     random.seed(seed)
@@ -279,6 +222,7 @@ while 1:
     schedule = Schedule()
     try:
         schedule.do()
+        break # bypass retry, temporarily just try once
     except RuntimeError:
         seed += 1
         break
@@ -297,17 +241,8 @@ for week in schedule.weeks:
         matches.append([week.date, court, (player1.name, None), (player2.name, None)])
     matches.append([week.date, "off", week.get_players_off(schedule.players)])
 
-with open(f"unreported_matches_{GROUP}.py", "w") as handle:
-    # json.dump(matches, handle, indent=2)
+with open(f"x_unreported_matches_{args.group}.py", "w") as handle:
     pprint.pprint(matches, handle)
 
-with open(f"reported_matches_{GROUP}.py", "w") as handle:
+with open(f"x_reported_matches_{args.group}.py", "w") as handle:
     handle.write('[]')
-
-# if args.html:
-#     assert not args.code
-#     print(schedule.as_html)
-# elif args.code:
-#     print(schedule.as_code)
-# else:
-#     print(schedule.get_summary())
