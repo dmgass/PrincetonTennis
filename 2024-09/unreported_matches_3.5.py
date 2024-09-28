@@ -1,6 +1,5 @@
 [['09/18', 'off', 'Jason K, Jason V, Nhan, Nick'],
  ['09/25', 'Court 1', ('Jason K', None), ('Nhan', None)],
- ['09/25', 'Court 2', ('Jason V', None), ('Nick', None)],
  ['09/25', 'off', 'Randy, Samer'],
  ['10/02', 'Court 1', ('Nhan', None), ('Nick', None)],
  ['10/02', 'Court 2', ('Jason K', None), ('Jason V', None)],

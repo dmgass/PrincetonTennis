@@ -1,8 +1,5 @@
 [['09/18', 'Court 4', ('Dan G', None), ('Matt', None)],
  ['09/18', 'off', 'Amit, Bryan'],
- ['09/25', 'Court 3', ('Amit', None), ('Bryan', None)],
- ['09/25', 'Court 4', ('Eric', None), ('Trevor', None)],
- ['09/25', 'Court 5', ('Brian', None), ('Matt', None)],
  ['09/25', 'off', 'Dan D, Dan G'],
  ['10/02', 'Court 4', ('Bryan', None), ('Matt', None)],
  ['10/02', 'Court 5', ('Amit', None), ('Dan D', None)],
