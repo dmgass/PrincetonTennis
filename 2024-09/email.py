@@ -159,7 +159,8 @@ for name, info in MEMBERS.items():
         continue
 
     if group == args.group:
-        PLAYERS[name] = Player(name)
+        nickname = info['nickname']
+        PLAYERS[nickname] = Player(nickname)
 
 new_results = []
 unreported_matches = []
@@ -177,7 +178,7 @@ def read_matches(filename):
                 this_weeks_schedule = schedule.setdefault(date, {})
                 assert court not in this_weeks_schedule
                 if names:
-                    names =", ".join(MEMBERS[name.strip()]['nickname'] for name in names.split(','))
+                    names =", ".join(name.strip() for name in names.split(','))
                 this_weeks_schedule[court] = names
             continue
 
@@ -185,19 +186,17 @@ def read_matches(filename):
 
         player1 = PLAYERS[name1]
         player2 = PLAYERS[name2]
-        nickname1 = MEMBERS[name1]['nickname']
-        nickname2 = MEMBERS[name2]['nickname']
         scores = {score1, score2}
 
         if None in scores:
             if date < args.week:
-                unreported_matches.append(f"{date}: {nickname1} v {nickname2}")
+                unreported_matches.append(f"{date}: {name1} v {name2}")
                 player1.makeups_to_play += 1
                 player2.makeups_to_play += 1
             else:
                 this_weeks_schedule = schedule.setdefault(date, {})
                 assert court not in this_weeks_schedule
-                this_weeks_schedule[court] = f"{nickname1} v {nickname2}"
+                this_weeks_schedule[court] = f"{name1} v {name2}"
         else:
             max_score = max(scores)
 
@@ -214,17 +213,17 @@ def read_matches(filename):
             if score1 == score2:
                 player1.matches_tied += 1
                 player2.matches_tied += 1
-                result = f"{nickname1} tied {nickname2} {score1} to {score2}"
+                result = f"{name1} tied {name2} {score1} to {score2}"
 
             elif score1 > score2:
                 player1.matches_won += 1
                 player2.matches_lost += 1
-                result = f"{nickname1} beat {nickname2} {score1} to {score2}"
+                result = f"{name1} beat {name2} {score1} to {score2}"
 
             else:
                 player2.matches_won += 1
                 player1.matches_lost += 1
-                result = f"{nickname2} beat {nickname1} {score2} to {score1}"
+                result = f"{name2} beat {name1} {score2} to {score1}"
 
             if 'unreported' in filename:
                 new_results.append(f"{date}: {result}")
@@ -275,11 +274,15 @@ def make_schedule_table(fmt):
         case _:
             raise RuntimeError(f"invalid format {fmt!r}")
 
+contact_info = []
+for name, member in MEMBERS.items():
+    try:
+        group = member['group'][SEASON]
+    except KeyError:
+        continue
 
-contact_info = [
-    f"{player.name}: {MEMBERS[player.name]['phone']}"
-    for player in PLAYERS.values()
-]
+    if group == args.group:
+        contact_info.append(f"{name}: {member['phone']}")
 
 print(f"Princeton Wednesday {args.group} Tennis Standings/Matches")
 print()

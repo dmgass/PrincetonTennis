@@ -238,7 +238,7 @@ print(schedule.get_summary())
 matches = []
 for week in schedule.weeks:
     for court, (player1, player2) in zip(week.courts, week.matches):
-        matches.append([week.date, court, (player1.name, None), (player2.name, None)])
+        matches.append([week.date, court, (player1.nickname, None), (player2.nickname, None)])
     matches.append([week.date, "off", week.get_players_off(schedule.players)])
 
 with open(f"unreported_matches_{args.group}.py", "w") as handle:

@@ -1,1 +1,1 @@
-[['09/18', 'Court 1', ('Randy Lee', 9), ('Samer Alanani', 4)]]
+[['09/18', 'Court 1', ('Randy', 9), ('Samer', 4)]]
