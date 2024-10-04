@@ -284,7 +284,7 @@ for name, member in MEMBERS.items():
     if group == args.group:
         contact_info.append(f"{name}: {member['phone']}")
 
-print(f"Princeton Wednesday {args.group} Tennis Standings/Matches")
+print(f"Princeton Wednesday {args.group} Tennis Matches/Standings - {args.week}")
 print()
 print()
 
@@ -305,6 +305,9 @@ if args.html:
 
     print("<h2>Contact Info</h2>")
     print("<br/>\n".join(contact_info))
+    print("<br/>\n")
+    print("<br/>\n")
+    print(f"https://github.com/dmgass/PrincetonTennis/tree/main/{SEASON}")
 
 else:
     print("Unreported Matches")
