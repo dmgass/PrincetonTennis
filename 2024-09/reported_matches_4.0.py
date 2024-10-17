@@ -7,4 +7,6 @@
  ['10/02', 'Court 5', ('Amit', 5), ('Dan D', 9)],
  ['10/02', 'Court 4', ('Bryan', 2), ('Matt', 9)],
  ['10/09', 'Court 4', ('Dan D', 9), ('Dan G', 6)],
- ['10/09', 'Court 5', ('Amit', 5), ('Eric', 9)]]
+ ['10/09', 'Court 5', ('Amit', 5), ('Eric', 9)],
+ ['10/16', 'Court 4', ('Dan G', 9), ('Trevor', 0)],
+ ['10/16', 'Court 5', ('Bryan', 9), ('Eric', 8)]]
