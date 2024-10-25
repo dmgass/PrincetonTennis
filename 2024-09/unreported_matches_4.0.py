@@ -6,9 +6,6 @@
  ['10/09', 'off', 'Brian, Bryan'],
  ['10/16', 'Court 6', ('Amit', None), ('Brian', None)],
  ['10/16', 'off', 'Dan D, Matt'],
- ['10/23', 'Court 4', ('Bryan', None), ('Dan D', None)],
- ['10/23', 'Court 5', ('Amit', None), ('Matt', None)],
- ['10/23', 'Court 6', ('Dan G', None), ('Eric', None)],
  ['10/23', 'off', 'Brian, Trevor'],
  ['10/30', 'Court 3', ('Brian', None), ('Bryan', None)],
  ['10/30', 'Court 4', ('Dan D', None), ('Trevor', None)],
@@ -33,7 +30,6 @@
  ['12/04', 'Court 5', ('Matt', None), ('Trevor', None)],
  ['12/04', 'Court 6', ('Amit', None), ('Bryan', None)],
  ['12/04', 'off', ''],
- ['12/11', 'Court 3', ('Bryan', None), ('Dan G', None)],
  ['12/11', 'Court 4', ('Amit', None), ('Matt', None)],
  ['12/11', 'Court 5', ('Dan D', None), ('Eric', None)],
  ['12/11', 'Court 6', ('Brian', None), ('Trevor', None)]]
