@@ -188,15 +188,15 @@ def read_matches(filename):
         player2 = PLAYERS[name2]
         scores = {score1, score2}
 
+        this_weeks_schedule = schedule.setdefault(date, {})
+        assert court not in this_weeks_schedule
+        this_weeks_schedule[court] = f"{name1} v {name2}"
+
         if None in scores:
             if date < args.week:
                 unreported_matches.append(f"{date}: {name1} v {name2}")
                 player1.makeups_to_play += 1
                 player2.makeups_to_play += 1
-            else:
-                this_weeks_schedule = schedule.setdefault(date, {})
-                assert court not in this_weeks_schedule
-                this_weeks_schedule[court] = f"{name1} v {name2}"
         else:
             max_score = max(scores)
 
@@ -242,6 +242,8 @@ def make_schedule_table(fmt):
     rows = []
 
     for date, matches in sorted(schedule.items()):
+        if date < args.week:
+            continue
         cells = [date]
         for court in header_row[1:]:
             try:
