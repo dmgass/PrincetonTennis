@@ -4,7 +4,7 @@
  ['10/02', 'off', 'Eric, Trevor'],
  ['10/09', 'Court 6', ('Matt', None), ('Trevor', None)],
  ['10/09', 'off', 'Brian, Bryan'],
- ['10/16', 'Court 6', ('Amit', None), ('Brian', None)],
+ ['10/16', 'Court 6', ('Amit', 0), ('Brian', 9)],
  ['10/16', 'off', 'Dan D, Matt'],
  ['10/23', 'off', 'Brian, Trevor'],
  ['10/30', 'Court 3', ('Brian', 9), ('Bryan', 0)],
