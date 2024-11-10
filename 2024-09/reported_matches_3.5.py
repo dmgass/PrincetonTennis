@@ -9,4 +9,7 @@
  ['10/23', 'Court 1', ('Jason V', 5), ('Nhan', 6)],
  ['10/23', 'Court 3', ('Jason K', 9), ('Randy', 0)],
  ['10/30', 'Court 1', ('Jason V', 9), ('Samer', 2)],
- ['11/13', 'Court 3', ('Jason K', 9), ('Samer', 7)]]
+ ['11/13', 'Court 3', ('Jason K', 9), ('Samer', 7)],
+ ['10/02', 'Court 1', ('Nhan', 9), ('Nick', 6)],
+ ['11/06', 'Court 1', ('Nhan', 9), ('Randy', 4)],
+ ['11/06', 'Court 2', ('Jason K', 9), ('Samer', 7)]]
