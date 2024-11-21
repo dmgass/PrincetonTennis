@@ -25,4 +25,7 @@
  ['11/06', 'Court 6', ('Eric', 5), ('Matt', 9)],
  ['11/13', 'Court 4', ('Dan D', 9), ('Matt', 6)],
  ['11/13', 'Court 5', ('Brian', 7), ('Eric', 9)],
- ['11/13', 'Court 6', ('Bryan', 0), ('Trevor', 9)]]
+ ['11/13', 'Court 6', ('Bryan', 0), ('Trevor', 9)],
+ ['11/20', 'Court 4', ('Dan G', 9), ('Trevor', 7)],
+ ['11/20', 'Court 5', ('Brian', 9), ('Bryan', 0)],
+ ['11/20', 'Court 6', ('Amit', 3), ('Dan D', 9)]]
