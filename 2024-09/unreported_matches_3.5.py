@@ -10,7 +10,6 @@
  ['10/30', 'Court 2', ('Nick', None), ('Randy', None)],
  ['10/30', 'off', 'Jason K, Nhan'],
  ['11/06', 'off', 'Jason V, Nick'],
- ['11/13', 'Court 1', ('Nhan', None), ('Nick', None)],
  ['11/13', 'Court 2', ('Jason V', None), ('Randy', None)],
  ['11/13', 'off', ''],
  ['11/20', 'Court 1', ('Nhan', None), ('Samer', None)],

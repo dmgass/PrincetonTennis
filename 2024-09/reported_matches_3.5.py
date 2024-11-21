@@ -12,4 +12,5 @@
  ['11/13', 'Court 3', ('Jason K', 9), ('Samer', 7)],
  ['10/02', 'Court 1', ('Nhan', 9), ('Nick', 6)],
  ['11/06', 'Court 1', ('Nhan', 9), ('Randy', 4)],
- ['11/06', 'Court 2', ('Jason K', 9), ('Samer', 7)]]
+ ['11/06', 'Court 2', ('Jason K', 9), ('Samer', 7)],
+ ['11/13', 'Court 1', ('Nhan', 3), ('Nick', 9)]]
