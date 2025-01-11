@@ -5,7 +5,7 @@ import pprint
 import random
 from texttable import Texttable
 
-SEASON = "2024-09"
+SEASON = "2024-09/SINGLES"
 
 WEEKS = {
     "09/18": {"3.5": [1], "4.0": [4, 5, 6]},

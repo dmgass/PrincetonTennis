@@ -1,7 +1,6 @@
 [['09/18', 'off', 'Jason K, Jason V, Nhan, Nick'],
  ['09/25', 'off', 'Randy, Samer'],
  ['10/02', 'off', ''],
- ['10/09', 'Court 1', ('Nick', None), ('Samer', None)],
  ['10/09', 'Court 2', ('Jason K', None), ('Randy', None)],
  ['10/09', 'off', ''],
  ['10/16', 'Court 2', ('Jason K', None), ('Nick', None)],
@@ -14,9 +13,8 @@
  ['11/13', 'off', ''],
  ['11/20', 'off', ''],
  ['12/04', 'Court 1', ('Jason K', None), ('Nhan', None)],
- ['12/04', 'Court 2', ('Jason V', None), ('Nick', None)],
  ['12/04', 'off', 'Randy, Samer'],
- ['12/11', 'Court 1', ('Nhan', None), ('Samer', None)],
- ['12/11', 'Court 2', ('Jason K', None), ('Nick', None)],
- ['12/11', 'Court 3', ('Jason V', None), ('Randy', None)],
- ['12/11', 'off', '']]
+ ['12/11', 'off', ''],
+ ['12/18', 'Court 3', ('Nhan', None), ('Jason V', None)],
+ ['12/18', 'Court 4', ('Nick', None), ('Samer', None)],
+ ['12/18', 'Court 5', ('Jason K', None), ('Randy', None)]]

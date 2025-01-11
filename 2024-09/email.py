@@ -2,7 +2,7 @@ import argparse
 import json
 from texttable import Texttable
 
-SEASON = '2024-09'
+SEASON = '2024-09/SINGLES'
 
 STYLE = 'style="border: 1px solid black"'
 

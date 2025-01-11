@@ -4,6 +4,7 @@
  ['10/02', 'Court 2', ('Jason K', 3), ('Jason V', 9)],
  ['10/02', 'Court 3', ('Randy', 9), ('Samer', 4)],
  ['10/09', 'Court 3', ('Jason V', 6), ('Nhan', 9)],
+ ['10/09', 'Court 1', ('Nick', 9), ('Samer', 3)],
  ['10/16', 'Court 1', ('Jason V', 9), ('Randy', 1)],
  ['10/16', 'Court 3', ('Nhan', 9), ('Samer', 1)],
  ['10/23', 'Court 1', ('Jason V', 5), ('Nhan', 6)],
@@ -16,4 +17,8 @@
  ['11/13', 'Court 1', ('Nhan', 3), ('Nick', 9)],
  ['11/20', 'Court 1', ('Nhan', 9), ('Samer', 4)],
  ['11/20', 'Court 2', ('Nick', 9), ('Randy', 2)],
- ['11/20', 'Court 3', ('Jason K', 3), ('Jason V', 9)]]
+ ['11/20', 'Court 3', ('Jason K', 3), ('Jason V', 9)],
+ ['12/04', 'Court 2', ('Jason V', 7), ('Nick', 9)],
+ ['12/11', 'Court 1', ('Nhan', 0), ('Samer', 9)],
+ ['12/11', 'Court 2', ('Jason K', 2), ('Nick', 9)],
+ ['12/11', 'Court 3', ('Jason V', 9), ('Randy', 6)]]

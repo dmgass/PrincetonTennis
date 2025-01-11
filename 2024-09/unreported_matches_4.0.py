@@ -1,8 +1,6 @@
 [['09/18', 'off', 'Amit, Bryan'],
  ['09/25', 'off', 'Dan D, Dan G'],
- ['10/02', 'Court 6', ('Brian', None), ('Dan G', None)],
  ['10/02', 'off', 'Eric, Trevor'],
- ['10/09', 'Court 6', ('Matt', None), ('Trevor', None)],
  ['10/09', 'off', 'Brian, Bryan'],
  ['10/16', 'off', 'Dan D, Matt'],
  ['10/23', 'off', 'Brian, Trevor'],
@@ -10,11 +8,7 @@
  ['11/06', 'off', ''],
  ['11/13', 'off', 'Amit, Dan G'],
  ['11/20', 'off', 'Eric, Matt'],
- ['12/04', 'Court 3', ('Brian', None), ('Dan D', None)],
- ['12/04', 'Court 4', ('Dan G', None), ('Eric', None)],
- ['12/04', 'Court 5', ('Matt', None), ('Trevor', None)],
- ['12/04', 'Court 6', ('Amit', None), ('Bryan', None)],
  ['12/04', 'off', ''],
- ['12/11', 'Court 4', ('Amit', None), ('Matt', None)],
- ['12/11', 'Court 5', ('Dan D', None), ('Eric', None)],
- ['12/11', 'Court 6', ('Brian', None), ('Trevor', None)]]
+ ['12/18', 'Court 1', ('Matt', None), ('Brian', None)],
+ ['12/18', 'Court 2', ('Eric', None), ('Amit', None)],
+ ['12/18', 'Court 3', ('Trevor', None), ('Bryan', None)]]
