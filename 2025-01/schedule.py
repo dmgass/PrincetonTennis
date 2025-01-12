@@ -16,10 +16,17 @@ class Player:
         self.possible_opponents = []
         self.num_matches = 0
         self.opponent_counts = {}
+        self.num_off_weeks = 0
+
+    @property
+    def priority(self):
+        return self.num_matches - self.num_off_weeks
 
     def record_match(self, opponents):
         self.num_matches += 1
         for opponent in opponents:
+            if opponent is self:
+                continue
             self.opponent_counts[opponent] += 1
             try:
                 self.possible_opponents.remove(opponent)
@@ -86,6 +93,7 @@ class Week:
 class Schedule:
 
     def __init__(self, league, group):
+        self.league = league
         self.matches_dir = f"{league.lower()}/{group}"
         self.matches_filename = f"{self.matches_dir}/matches.py"
         self.players = self.get_players(league, group)
@@ -119,17 +127,55 @@ class Schedule:
             weeks[date] = Week(date, data)
 
         for week in weeks.values():
+            for name in week.requested_off:
+                self.players[name].num_off_weeks += 1
+
             for _court, match_data in week.matches.items():
                 player_names, *score_data = match_data
-                for name in [n for n in player_names if n]:
-                    opponents = [self.players[opp] for opp in player_names if name is not opp]
-                    self.players[name].record_match([self.players[n] for n in opponents])
+                opponents = [self.players[n] for n in player_names if n]
+                for opponent in opponents:
+                    opponent.record_match(opponents)
 
                 if score_data:
                     (score1, score2, reported), = score_data
                     # TODO
 
         return weeks
+    
+    def fill(self):
+        for week in self.weeks.values():
+            assert all(name in self.players for name in week.requested_off), week.requested_off
+            available_names = list(set(self.players.keys()) - set(week.requested_off))
+            random.shuffle(available_names)
+            available_players = list(
+                sorted(
+                    list(self.players[n] for n in available_names), 
+                    key=operator.attrgetter("priority")
+                ))
+
+
+            matches = {}
+            off = list(self.players)
+            for court, match_data in week.matches.items():
+                player_names, *score_data = match_data
+                if all(player_names):
+                    for name in player_names:
+                        off.remove(name)
+                    matches[court] = match_data
+                else:
+                    assert not week.off, f"week {week.date}: off should be empty"
+                    num_players = len(player_names)
+                    assert len(available_players) >= num_players, f"np: {num_players} available_players"
+                    players = available_players[:num_players]
+                    available_players = available_players[num_players:]
+                    for player in players:
+                        player.record_match(players)
+                        off.remove(player.nickname)
+
+                    matches[court] = [[player.nickname for player in players]] + score_data
+
+            week.matches = matches
+            week.off = off
 
     def save(self, backup=False):
         if backup:
@@ -179,8 +225,8 @@ class Schedule:
                     opponents = week.matches[court][0]
                 except KeyError:
                     opponents = []
-                row.append(" ".join(opponents))
-            row.append(" ".join(week.off))
+                row.append(", ".join(opponents))
+            row.append(", ".join(week.off))
             rows.append(row)
         table.add_rows(rows)
         lines += [table.draw()]
@@ -255,8 +301,8 @@ if __name__ == "__main__":
     random.seed(args.seed)
 
     schedule = Schedule(args.league, args.group)
-    # schedule.fill()
+    schedule.fill()
     schedule.save(backup=True)
 
-    # print(schedule.get_text_summary())
+    print(schedule.get_text_summary())
 

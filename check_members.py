@@ -1,8 +1,17 @@
 
 import argparse
 
-UNIQUE_FIELDS = ("nickname", "phone", "email")
-FIELDS = ("group",) + UNIQUE_FIELDS
+UNIQUE_FIELDS = ("phone", "email")
+FIELDS = ("group", "nickname") + UNIQUE_FIELDS
+
+def check_member_nicknames(database, season, league):
+    unique_values = set()
+    group_key = f"{season}/{league}"
+    for name, info in database.items():
+        if group_key in info["group"]:
+            nickname = info["nickname"]
+            assert info["nickname"] not in unique_values, f"{nickname}@{name} not unique"
+            unique_values.add(nickname)
 
 def check_members(database):
     unique_values = {f: set() for f in UNIQUE_FIELDS}
@@ -19,14 +28,15 @@ def summarize_groups(season, database):
     for name, info in database.items():
         for league, group in info["group"].items():
             if league.startswith(season):
-                groups.setdefault(league, {}).setdefault(group, set()).add(name)
+                groups.setdefault(league, {}).setdefault(group, set()).add(f"{name} - {info['nickname']}")
 
     for league in sorted(groups):
         for group in sorted(groups[league]):
-            title = f"{league}-{group}"
+            group_names = groups[league][group]
+            title = f"{league}-{group} ({len(group_names)})"
             print(title)
             print("=" * len(title))
-            for name in sorted(groups[league][group]):
+            for name in sorted(group_names):
                 print(name)
             print()
 
@@ -39,4 +49,6 @@ with open("members.json") as handle:
     database = eval(handle.read())
 
 check_members(database)
+check_member_nicknames(database, args.season, "DOUBLES")
+check_member_nicknames(database, args.season, "SINGLES")
 summarize_groups(args.season, database)
