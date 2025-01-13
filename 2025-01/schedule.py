@@ -147,12 +147,18 @@ class Schedule:
             assert all(name in self.players for name in week.requested_off), week.requested_off
             available_names = list(set(self.players.keys()) - set(week.requested_off))
             random.shuffle(available_names)
-            available_players = list(
-                sorted(
-                    list(self.players[n] for n in available_names), 
-                    key=operator.attrgetter("priority")
-                ))
-
+            if self.league == "DOUBLES":
+                available_players = list(
+                    sorted(
+                        list(self.players[n] for n in available_names), 
+                        key=operator.attrgetter("priority")
+                    ))
+            else:
+                available_players = list(
+                    sorted(
+                        list(self.players[n] for n in available_names), 
+                        key=operator.attrgetter("num_matches")
+                    ))
 
             matches = {}
             off = list(self.players)
@@ -166,8 +172,17 @@ class Schedule:
                     assert not week.off, f"week {week.date}: off should be empty"
                     num_players = len(player_names)
                     assert len(available_players) >= num_players, f"np: {num_players} available_players"
-                    players = available_players[:num_players]
-                    available_players = available_players[num_players:]
+                    if num_players == 2:
+                        player1 = available_players.pop(0)
+                        def rank(player):
+                            return player1.opponent_counts[player]
+                        candidates = list(sorted(available_players, key=rank))
+                        player2 = candidates[0]
+                        available_players.remove(player2)
+                        players = [player1, player2]
+                    else:
+                        players = available_players[:num_players]
+                        available_players = available_players[num_players:]
                     for player in players:
                         player.record_match(players)
                         off.remove(player.nickname)
@@ -205,6 +220,18 @@ class Schedule:
             lines += [player.name]
             for opponent, count in player.opponent_counts.items():
                 lines += [f"  {opponent.nickname}: {count}"]
+            streaks = []
+            off = []
+            for week in self.weeks.values():
+                if player.nickname in week.off:
+                    off.append(week.date)
+                elif off:
+                    if len(off) > 1:
+                        streaks.append("-".join(off))
+                    off = []
+            if streaks:
+                lines += [",".join(streaks)]
+
             lines += [""]
 
         for player in self.players.values():
