@@ -8,11 +8,15 @@ from texttable import Texttable
 
 SEASON = "2025-01"
 
+STYLE = 'style="border: 1px solid black"'
+
 class Player:
 
-    def __init__(self, name, nickname):
+    def __init__(self, name, nickname, phone, email):
         self.name = name
         self.nickname = nickname
+        self.phone = phone
+        self.email = email
         self.possible_opponents = []
         self.num_matches = 0
         self.opponent_counts = {}
@@ -46,8 +50,8 @@ class Player:
 
 class Players(dict):
 
-    def add(self, name, nickname):
-        self[nickname] = Player(name, nickname)
+    def add(self, name, nickname, phone, email):
+        self[nickname] = Player(name, nickname, phone, email)
 
     @property
     def in_least_scheduled_order(self):
@@ -73,23 +77,6 @@ class Week:
         self.matches = data
         for court in data.keys():
             data[court][0] = list(sorted(data[court][0]))
-        
-    @property
-    def xis_available(self):
-        return len(self.matches) < len(self.courts)
-
-    def xassign_match(self, player1, player2):
-        self.players_scheduled += [player1, player2]
-        self.matches.append((player1, player2))
-        player1.record_match(player2)
-        player2.record_match(player1)
-        return f"{self.date} {player1.name} {player2.name}"
-
-    def xget_players_off(self, players):
-        return ", ".join(sorted(
-            set(p.name for p in players.values()) -
-            set(p.name for p in self.players_scheduled)
-        ))
 
 
 class Schedule:
@@ -113,7 +100,7 @@ class Schedule:
                 continue
 
             if player_group == group:
-                players.add(name, info["nickname"])
+                players.add(name, info["nickname"], info["phone"], info["email"])
 
         players.reset(initialize_opponent_counts=True)
 
@@ -217,11 +204,32 @@ class Schedule:
             pprint.pprint(matches, handle)
 
     def get_text_summary(self):
-        lines = []
+        lines = [self.make_table(fmt="text")]
+        lines += [""]
+        lines += [
+            "Player Opponent Counts",
+            "======================"
+        ]
         for player in self.players.values():
-            lines += [player.name]
+            lines += [f"{player.name} ({player.num_matches} total)"]
+            back_to_backs = {}
+
+            if self.league == "SINGLES":
+                last_opponent = None
+                last_week = None
+                for week in self.weeks.values():
+                    for match_data in week.matches.values():
+                        names = list(match_data[0])
+                        if player.nickname in names:
+                            names.remove(player.nickname)
+                            opponent = names.pop()
+                            if last_opponent == opponent:
+                                back_to_backs[opponent] = f" {last_week} & {week.date}"
+                            last_opponent = opponent
+                    last_week = week.date
+
             for opponent, count in player.opponent_counts.items():
-                lines += [f"  {opponent.nickname}: {count}"]
+                lines += [f"  {opponent.nickname}: {count} {back_to_backs.get(opponent.nickname, '')}"]
             streaks = []
             off = []
             for week in self.weeks.values():
@@ -236,16 +244,23 @@ class Schedule:
 
             lines += [""]
 
+        lines += [
+            "Player Match Counts",
+            "==================="
+            ]
         for player in self.players.values():
-            lines += [f"{player.nickname} {player.num_matches}"]
-        lines += [""]
+            lines += [f"{player.num_matches} - {player.name}"]
+
+        return "\n".join(lines)
+
+    def make_table(self, fmt, start_week=None):
+        lines = []
 
         courts = set()
         for week in self.weeks.values():
             for court in week.matches.keys():
                 courts.add(court)
 
-        table = Texttable()
         rows = [["Week"] + list(sorted(courts)) + ["Off"]]
         for week in self.weeks.values():
             row = [week.date]
@@ -257,68 +272,25 @@ class Schedule:
                 row.append(", ".join(opponents))
             row.append(", ".join(week.off))
             rows.append(row)
-        table.add_rows(rows)
-        lines += [table.draw()]
+
+        if fmt == "html":
+            lines = [
+                '<table style="border: 1px solid black">',
+                "".join(f"<th {STYLE}>{cell}</th>" for cell in rows[0]),
+            ]
+            for cells in rows[1:]:
+                row_cells = "".join(f"<td {STYLE}>{cell}</td>" for cell in cells)
+                lines += [f"<tr>{row_cells}<tr/>"]
+            lines += ["</table>"]
+        elif fmt == "text":
+            table = Texttable()
+            table.add_rows(rows)
+            lines += [table.draw()]
+        else:
+            raise RuntimeError(f"Illegal format: {fmt}")
+
         return "\n".join(lines)
 
-    def xget_available_weeks(self, player):
-         return [
-             week for week in self.weeks 
-             if week.is_available and (week.date not in player.off) and (player not in week.players_scheduled)
-             ]
-
-    def xcreate_match(self):
-        for player in self.players.in_least_scheduled_order:
-            available_weeks = self.get_available_weeks(player)
-            for opponent in player.opponents_by_least_scheduled:
-                for week in available_weeks:
-                    if week.date not in opponent.off and opponent not in week.players_scheduled:
-                        if player.nickname > opponent.nickname:
-                            player, opponent = opponent, player
-                        return week.assign_match(player, opponent)
-
-        return None
-
-    def xdo(self):
-        num_matches = sum([len(week.courts) for week in self.weeks])
-        num_preloaded = sum([len(week.matches) for week in self.weeks])
-
-        for match_number in range(num_preloaded + 1, num_matches + 1):
-            match = self.create_match()
-
-            if not match:
-                self.players.reset()
-                match = self.create_match()
-
-            if not match:
-                raise RuntimeError()
-
-    def xget_summary(self):
-        lines = []
-        for player in self.players.values():
-            lines += [player.name]
-            for opponent, count in player.opponent_counts.items():
-                lines += [f"  {opponent.nickname}: {count}"]
-            lines += [""]
-
-        for player in self.players.values():
-            lines += [f"{player.nickname} {player.num_matches}"]
-        lines += [""]
-
-        courts = set()
-        for _date, week_courts in WEEKS.items():
-            for court in week_courts[args.group]:
-                courts.add(court)
-
-        table = Texttable()
-        rows = [["Week"] + list(sorted(courts)) + ["Off"]]
-        for week in self.weeks:
-            assignments = dict(zip(week.courts, [f"{p1.nickname} v {p2.nickname}" for p1, p2 in week.matches]))
-            matches = [assignments.get(court, "") for court in courts]
-            rows += [[week.date] + matches[:len(courts)] + [week.get_players_off(self.players)]]
-        table.add_rows(rows)
-        lines += [table.draw()]
-        return "\n".join(lines)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
