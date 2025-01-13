@@ -68,9 +68,11 @@ class Week:
 
     def __init__(self, date, data):
         self.date = date
-        self.off = data.pop("off")
+        self.off = list(sorted(data.pop("off")))
         self.requested_off = data.pop("requested_off")
         self.matches = data
+        for court in data.keys():
+            data[court][0] = list(sorted(data[court][0]))
         
     @property
     def xis_available(self):
