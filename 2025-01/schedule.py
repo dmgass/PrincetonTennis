@@ -21,6 +21,12 @@ class Player:
         self.num_matches = 0
         self.opponent_counts = {}
         self.num_off_weeks = 0
+        self.games_won = 0
+        self.games_lost = 0
+        self.matches_won = 0
+        self.matches_lost = 0
+        self.matches_tied = 0
+        self.makeups_to_play = 0
 
     @property
     def priority(self):
@@ -46,6 +52,123 @@ class Player:
         opponents = sorted(opponents, key=against_self)
         return sorted(opponents, key=operator.attrgetter("num_matches"))
 
+    @classmethod
+    def make_table(cls, players, rank_name, fmt):
+        rank_property = getattr(cls, "rank_" + rank_name).fget
+        cells_property = getattr(cls, "cells_" + rank_name).fget
+
+        header_row = getattr(cls, "header_" + rank_name)
+        rows = [cells_property(player) for player in sorted(players.values(), key=rank_property)]
+
+        match fmt:
+            case "text":
+                table = Texttable()
+                table.add_rows([header_row] + rows)
+                return table.draw()
+
+            case "html":
+                lines = [
+                    '<table style="border: 1px solid black">',
+                    "".join(f"<th {STYLE}>{cell}</th>" for cell in header_row),
+                ]
+                for cells in rows:
+                    row_cells = "".join(f"<td {STYLE}>{cell}</td>" for cell in cells)
+                    lines += [f"<tr>{row_cells}<tr/>"]
+                lines += ["</table>"]
+                return "\n".join(lines)
+
+            case _:
+                raise RuntimeError(f"invalid format {fmt!r}")
+
+    @property
+    def matches_played(self):
+        return self.matches_won + self.matches_tied + self.matches_lost
+
+    @property
+    def rank_by_match(self):
+        return (
+            -self.matches_won, 
+            -self.matches_tied, 
+            #self.matches_lost, 
+            -self.games_won, 
+            self.games_lost, 
+            self.name,
+        )
+
+    @property
+    def rank_by_games(self):
+        return (
+            -self.games_won, 
+            self.games_lost, 
+            -self.matches_won, 
+            -self.matches_tied, 
+            self.matches_lost, 
+            self.name,
+        )
+
+    header_by_match = (
+        "Player", "Won", "Tied", "Lost", "Games Won", "Games Lost", "Makeups")
+
+    header_by_games = (
+        "Player", "Games Won", "Games Lost", "Matches Won", "Matches Tied", "Matches Lost", "Makeups")
+
+    @property
+    def cells_by_match(self):
+        return (
+            self.name, 
+            self.matches_won, 
+            self.matches_tied, 
+            self.matches_lost, 
+            self.games_won, 
+            self.games_lost, 
+            self.makeups_to_play if self.makeups_to_play else "",
+        )
+
+    @property
+    def cells_by_games(self):
+        return (
+            self.name, 
+            self.games_won, 
+            self.games_lost, 
+            self.matches_won, 
+            self.matches_tied, 
+            self.matches_lost, 
+            self.makeups_to_play if self.makeups_to_play else "",
+        )
+
+    @property
+    def rank_by_avg_games(self):
+        if self.matches_played:
+            return (
+                -(self.games_won / self.matches_played), 
+                self.games_lost / self.matches_played, 
+                self.name
+            )
+        
+        return 0, 0, self.name
+
+    header_by_avg_games = ("Player", "Avg Games Won", "Avg Games Lost")
+
+    @property
+    def cells_by_avg_games(self):
+        if self.matches_played:
+            return (
+                self.name,
+                f"{self.games_won / self.matches_played:0.1f}", 
+                f"{self.games_lost / self.matches_played:0.1f}", 
+            )
+        
+        return self.name, 0, 0
+
+    @property
+    def rank_by_name(self):
+        return self.name
+
+    @property
+    def cells_by_name(self):
+        return self.cells_by_match
+
+    header_by_name = header_by_match
 
 
 class Players(dict):
@@ -81,12 +204,12 @@ class Week:
 
 class Schedule:
 
-    def __init__(self, league, group):
+    def __init__(self, league, group, date=None):
         self.league = league
         self.matches_dir = f"{league.lower()}/{group}"
         self.matches_filename = f"{self.matches_dir}/matches.py"
         self.players = self.get_players(league, group)
-        self.weeks = self.load()
+        self.weeks, self.unreported_results, self.results_to_report = self.load(date)
 
     def get_players(self, league, group):
         players = Players()
@@ -106,11 +229,14 @@ class Schedule:
 
         return players
 
-    def load(self):
+    def load(self, this_weeks_date):
         with open(self.matches_filename) as handle:
             file_data = eval(handle.read())
 
         weeks = {}
+
+        results_to_report = []
+        unreported_results = []
 
         for date, data in file_data.items():
             weeks[date] = Week(date, data)
@@ -126,10 +252,49 @@ class Schedule:
                     opponent.record_match(opponents)
 
                 if score_data:
-                    (score1, score2, reported), = score_data
-                    # TODO
+                    name1, name2 = player_names
+                    player1 = self.players[name1]
+                    player2 = self.players[name2]
+                    (score1, score2, report), = score_data
 
-        return weeks
+                    if score1 is None or score2 is None:
+                        if this_weeks_date and this_weeks_date > week.date:
+                            unreported_results.append(f"{week.date}: {name1} v {name2}")
+                            player1.makeups_to_play += 1
+                            player2.makeups_to_play += 1
+
+                    else:
+                        max_score = max([score1, score2])
+
+                        if max_score > 9:
+                            adjustment = max_score - 9
+                        else:
+                            adjustment = 0
+
+                        player1.games_won += score1 - adjustment
+                        player2.games_won += score2 - adjustment
+                        player1.games_lost += score2 - adjustment
+                        player2.games_lost += score1- adjustment
+
+                        if score1 == score2:
+                            player1.matches_tied += 1
+                            player2.matches_tied += 1
+                            result = f"{name1} tied {name2} {score1} to {score2}"
+
+                        elif score1 > score2:
+                            player1.matches_won += 1
+                            player2.matches_lost += 1
+                            result = f"{name1} beat {name2} {score1} to {score2}"
+
+                        else:
+                            player2.matches_won += 1
+                            player1.matches_lost += 1
+                            result = f"{name2} beat {name1} {score2} to {score1}"
+
+                        if report:
+                            results_to_report.append(f"{date}: {result}")
+
+        return weeks, unreported_results, results_to_report
     
     def fill(self):
         for week in self.weeks.values():
@@ -263,6 +428,8 @@ class Schedule:
 
         rows = [["Week"] + list(sorted(courts)) + ["Off"]]
         for week in self.weeks.values():
+            if week.date < start_week:
+                continue
             row = [week.date]
             for court in courts:
                 try:
@@ -290,6 +457,9 @@ class Schedule:
             raise RuntimeError(f"Illegal format: {fmt}")
 
         return "\n".join(lines)
+
+    def get_standings(self, rank_name, fmt):
+        return Player.make_table(self.players, rank_name, fmt)
 
 
 if __name__ == "__main__":
