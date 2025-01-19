@@ -2,3 +2,4 @@ members.json
 2024-09/__pycache__
 2025-01/__pycache__
 matches_*.py
+*.pyc
