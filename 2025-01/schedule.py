@@ -115,7 +115,7 @@ class Player:
     @property
     def cells_by_match(self):
         return (
-            self.name, 
+            self.nickname, 
             self.matches_won, 
             self.matches_tied, 
             self.matches_lost, 
@@ -127,7 +127,7 @@ class Player:
     @property
     def cells_by_games(self):
         return (
-            self.name, 
+            self.nickname, 
             self.games_won, 
             self.games_lost, 
             self.matches_won, 
@@ -153,12 +153,12 @@ class Player:
     def cells_by_avg_games(self):
         if self.matches_played:
             return (
-                self.name,
+                self.nickname,
                 f"{self.games_won / self.matches_played:0.1f}", 
                 f"{self.games_lost / self.matches_played:0.1f}", 
             )
         
-        return self.name, 0, 0
+        return self.nickname, 0, 0
 
     @property
     def rank_by_name(self):
@@ -243,15 +243,18 @@ class Schedule:
 
         for week in weeks.values():
             for name in week.requested_off:
-                self.players[name].num_off_weeks += 1
+                if name != "TBD":
+                    self.players[name].num_off_weeks += 1
 
             for _court, match_data in week.matches.items():
                 player_names, *score_data = match_data
-                opponents = [self.players[n] for n in player_names if n]
+                opponents = [self.players[n] for n in player_names if n and n != "TBD"]
                 for opponent in opponents:
                     opponent.record_match(opponents)
 
-                if score_data:
+                if opponents and score_data[0]:
+                    if "TBD" in player_names:
+                        continue
                     name1, name2 = player_names
                     player1 = self.players[name1]
                     player2 = self.players[name2]
@@ -266,7 +269,7 @@ class Schedule:
                     else:
                         max_score = max([score1, score2])
 
-                        if max_score > 9:
+                        if max_score != 9:
                             adjustment = max_score - 9
                         else:
                             adjustment = 0
@@ -292,12 +295,14 @@ class Schedule:
                             result = f"{name2} beat {name1} {score2} to {score1}"
 
                         if report:
-                            results_to_report.append(f"{date}: {result}")
+                            results_to_report.append(f"{week.date}: {result}")
 
         return weeks, unreported_results, results_to_report
     
     def fill(self):
         for week in self.weeks.values():
+            if "TBD" in week.requested_off:
+                continue
             assert all(name in self.players for name in week.requested_off), week.requested_off
             available_names = list(set(self.players.keys()) - set(week.requested_off))
             random.shuffle(available_names)
@@ -428,7 +433,7 @@ class Schedule:
 
         rows = [["Week"] + list(sorted(courts)) + ["Off"]]
         for week in self.weeks.values():
-            if week.date < start_week:
+            if start_week and week.date < start_week:
                 continue
             row = [week.date]
             for court in courts:
