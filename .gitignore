@@ -1,2 +1,3 @@
 members.json
 matches_*.py
+*.pyc
