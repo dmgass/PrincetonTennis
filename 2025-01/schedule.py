@@ -351,6 +351,13 @@ class Schedule:
             week.matches = matches
             week.off = off
 
+    def reset_report_flags(self):
+        for week in self.weeks.values():
+            for court, match_data in week.matches.items():
+                player_names, *score_data = match_data
+                if score_data[0] and None not in score_data[0]:
+                    score_data[0][-1] = False
+
     def save(self, backup=False):
         if backup:
             filenames = os.listdir(self.matches_dir)

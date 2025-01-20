@@ -1,5 +1,5 @@
 import argparse
-from schedule import Player, Schedule, SEASON
+from schedule import Schedule
 
 parser = argparse.ArgumentParser()
 parser.add_argument("week")
@@ -43,7 +43,7 @@ if args.fmt == "html":
     print("<br/>\n".join(contacts) + "<br/>")
     print("<br/>")
     print("<br/>")
-    print(f"https://github.com/dmgass/PrincetonTennis/tree/main/{SEASON}/{args.league}/{args.group}")
+    print(f"https://github.com/dmgass/PrincetonTennis/tree/main/{schedule.SEASON}/{args.league}/{args.group}")
 
 else:
     if schedule.unreported_results:

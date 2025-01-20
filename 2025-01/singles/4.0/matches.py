@@ -1,6 +1,6 @@
 {'01/15': {'Court 4': [['Amit', 'Nick'], [None, None, True]],
-           'Court 5': [['Brian', 'Eric'], [9, 8, True]],
-           'Court 6': [['Rob', 'Trevor'], [9, 6, True]],
+           'Court 5': [['Brian', 'Eric'], [9, 8, False]],
+           'Court 6': [['Rob', 'Trevor'], [9, 6, False]],
            'off': ['Dan', 'Matt'],
            'requested_off': ['Dan', 'Matt']},
  '01/22': {'Court 4': [['Matt', 'Trevor'], [None, None, True]],
