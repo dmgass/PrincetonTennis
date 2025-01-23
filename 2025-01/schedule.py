@@ -252,7 +252,7 @@ class Schedule:
                 for opponent in opponents:
                     opponent.record_match(opponents)
 
-                if opponents and score_data[0]:
+                if opponents and score_data and score_data[0]:
                     if "TBD" in player_names:
                         continue
                     name1, name2 = player_names
@@ -449,7 +449,12 @@ class Schedule:
                 except KeyError:
                     opponents = []
                 row.append(", ".join(opponents))
-            row.append(", ".join(week.off))
+            off = list(sorted(week.off))
+            try:
+                off.remove('Trung')
+            except ValueError:
+                pass
+            row.append(", ".join(off))
             rows.append(row)
 
         if fmt == "html":
