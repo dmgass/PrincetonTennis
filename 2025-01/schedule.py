@@ -270,14 +270,23 @@ class Schedule:
                         max_score = max([score1, score2])
 
                         if max_score != 9:
-                            adjustment = max_score - 9
+                            loser_score = int(min([score1, score2]) * 9 / max_score)
+                            
+                            if score1 == max_score:
+                                player1.games_won += 9
+                                player2.games_won += loser_score
+                                player1.games_lost += loser_score
+                                player2.games_lost += 9
+                            else:
+                                player1.games_won += loser_score
+                                player2.games_won += 9
+                                player1.games_lost += 9
+                                player2.games_lost += loser_score
                         else:
-                            adjustment = 0
-
-                        player1.games_won += score1 - adjustment
-                        player2.games_won += score2 - adjustment
-                        player1.games_lost += score2 - adjustment
-                        player2.games_lost += score1- adjustment
+                            player1.games_won += score1
+                            player2.games_won += score2
+                            player1.games_lost += score2
+                            player2.games_lost += score1
 
                         if score1 == score2:
                             player1.matches_tied += 1
