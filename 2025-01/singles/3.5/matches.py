@@ -20,7 +20,7 @@
            'requested_off': ['Ramsey']},
  '02/12': {'Court 1': [['Ramsey', 'Samer'], [None, None, True]],
            'Court 2': [['Hiroki', 'Jason K'], [9, 4, False]],
-           'Court 3': [['Betsy', 'Jason V'], [None, None, True]],
+           'Court 3': [['Betsy', 'Jason V'], [9, 4, False]],
            'off': ['Arthur', 'Brady', 'Nirav'],
            'requested_off': ['Nirav']},
  '02/19': {'Court 1': [['Brady', 'Ramsey'], [None, None, True]],
