@@ -73,3 +73,10 @@ else:
     print(schedule.make_table("text", args.week))
     print()
     print()
+
+    print("Matches to Bill")
+    print("===============")
+    for player in schedule.players.values():
+        print(f"{player.name}: {player.num_to_bill}")
+    print()
+    print()

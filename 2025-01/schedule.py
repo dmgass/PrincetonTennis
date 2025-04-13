@@ -10,6 +10,13 @@ SEASON = "2025-01"
 
 STYLE = 'style="border: 1px solid black"'
 
+INJURED = {'Ramsey', 'Nick', 'Trevor', 'Rob'}
+
+# billing skips injured for unplayed matches prior to this date
+# (this can be used to resume billing for a just one injured player)
+BILL_AFTER = '12/31'
+
+
 class Player:
 
     def __init__(self, name, nickname, phone, email):
@@ -27,6 +34,7 @@ class Player:
         self.matches_lost = 0
         self.matches_tied = 0
         self.makeups_to_play = 0
+        self.num_to_bill = 0
 
     @property
     def priority(self):
@@ -260,7 +268,12 @@ class Schedule:
                     player2 = self.players[name2]
                     (score1, score2, report), = score_data
 
+                    bill = True
+
                     if score1 is None or score2 is None:
+                        if name1 in INJURED or name2 in INJURED:
+                            bill = week.date >= BILL_AFTER
+
                         if this_weeks_date and this_weeks_date > week.date:
                             unreported_results.append(f"{week.date}: {name1} v {name2}")
                             player1.makeups_to_play += 1
@@ -305,6 +318,9 @@ class Schedule:
 
                         if report:
                             results_to_report.append(f"{week.date}: {result}")
+                    if bill:
+                        player1.num_to_bill += 1
+                        player2.num_to_bill += 1
 
         return weeks, unreported_results, results_to_report
     
