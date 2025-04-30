@@ -65,7 +65,7 @@
            'requested_off': []},
  '04/23': {'Court 4': [['Rob', 'Trevor'], [None, None, True]],
            'Court 5': [['Eric', 'Nick'], [None, None, True]],
-           'Court 6': [['Amit', 'Brian'], [None, None, True]],
+           'Court 6': [['Amit', 'Brian'], [4, 9, False]],
            'off': ['Dan', 'Matt'],
            'requested_off': []},
  '04/30': {'Court 4': [['Matt', 'Trevor'], [None, None, True]],
@@ -74,7 +74,7 @@
            'off': ['Amit', 'Nick'],
            'requested_off': []},
  '05/07': {'Court 4': [['Nick', 'Trevor'], [None, None, True]],
-           'Court 5': [['Dan', 'Eric'], [None, None, True]],
+           'Court 5': [['Dan', 'Eric'], [4, 9, False]],
            'Court 6': [['Amit', 'Rob'], [None, None, True]],
            'off': ['Brian', 'Matt'],
            'requested_off': []}}
