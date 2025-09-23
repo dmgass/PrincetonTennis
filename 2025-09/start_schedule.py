@@ -32,6 +32,20 @@ WEEKS = {
         "12/08": ["Court 6"],
         "12/15": ["Court 6"],
     },
+    "doubles/SUN-3.X": {
+        "09/28": ["Court 5", "Court 6"],
+        "10/05": ["Court 5", "Court 6"],
+        "10/12": ["Court 5", "Court 6"],
+        "10/19": ["Court 5", "Court 6"],
+        "10/26": ["Court 5", "Court 6"],
+        "11/02": ["Court 5", "Court 6"],
+        "11/09": ["Court 5", "Court 6"],
+        "11/16": ["Court 5", "Court 6"],
+        "11/23": ["Court 5", "Court 6"],
+        "12/07": ["Court 5", "Court 6"],
+        "12/14": ["Court 5", "Court 6"],
+        "12/21": ["Court 5", "Court 6"],
+    },
     "singles/WED-3.X": {
         "09/24": ["Court 1", "Court 2", "Court 3"],
         "10/01": ["Court 1", "Court 2", "Court 3"],
@@ -62,22 +76,6 @@ WEEKS = {
         "12/10": ["Court 4", "Court 5", "Court 6"],
         "12/17": ["Court 4", "Court 5", "Court 6"],
     },
-    "singles/SUN-3.X": {
-        "09/28": ["Court 5", "Court 6"],
-        "10/05": ["Court 5", "Court 6"],
-        "10/12": ["Court 5", "Court 6"],
-        "10/19": ["Court 5", "Court 6"],
-        "10/26": ["Court 5", "Court 6"],
-        "11/02": ["Court 5", "Court 6"],
-        "11/09": ["Court 5", "Court 6"],
-        "11/16": ["Court 5", "Court 6"],
-        "11/23": ["Court 5", "Court 6"],
-        "12/07": ["Court 5", "Court 6"],
-        "12/14": ["Court 5", "Court 6"],
-        "12/21": ["Court 5", "Court 6"],
-    },
-
-
 }
 
 for league, weeks in WEEKS.items():

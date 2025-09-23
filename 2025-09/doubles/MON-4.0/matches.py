@@ -1,4 +1,4 @@
-{'09/22': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+{'09/22': {'Court 6': [['Dan D', 'Jacek', 'Kumar', 'Murali']], 'off': ['Wade', 'Amit'], 'requested_off': ['Wade', 'Amit']},
  '09/29': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
  '10/06': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
  '10/13': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
