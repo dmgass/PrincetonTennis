@@ -1,0 +1,13 @@
+{'09/22': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '09/29': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '10/06': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '10/13': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '10/20': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '10/27': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '11/03': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '11/10': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '11/17': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '11/24': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '12/01': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '12/08': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []},
+ '12/15': {'Court 6': [['', '', '', '']], 'off': [], 'requested_off': []}}

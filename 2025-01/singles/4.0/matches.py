@@ -69,7 +69,7 @@
            'off': ['Dan', 'Matt'],
            'requested_off': []},
  '04/30': {'Court 4': [['Matt', 'Trevor'], [None, None, True]],
-           'Court 5': [['Brian', 'Dan'], [None, None, True]],
+           'Court 5': [['Brian', 'Dan'], [9, 4, True]],
            'Court 6': [['Eric', 'Rob'], [None, None, True]],
            'off': ['Amit', 'Nick'],
            'requested_off': []},
