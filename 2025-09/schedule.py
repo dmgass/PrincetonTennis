@@ -6,11 +6,11 @@ import pprint
 import random
 from texttable import Texttable
 
-SEASON = "2025-01"
+SEASON = "2025-09"
 
 STYLE = 'style="border: 1px solid black"'
 
-INJURED = {'Ramsey', 'Nick', 'Trevor', 'Rob'}
+INJURED = {}
 
 # billing skips injured for unplayed matches prior to this date
 # (this can be used to resume billing for a just one injured player)
@@ -212,21 +212,22 @@ class Week:
 
 class Schedule:
 
-    def __init__(self, league, group, date=None):
-        self.league = league
-        self.matches_dir = f"{league.lower()}/{group}"
+    def __init__(self, league, date=None):
+        league_type, group = os.path.split(league)
+        self.league_type = league_type.upper()
+        self.matches_dir = league
         self.matches_filename = f"{self.matches_dir}/matches.py"
-        self.players = self.get_players(league, group)
+        self.players = self.get_players(self.league_type, group)
         self.weeks, self.unreported_results, self.results_to_report = self.load(date)
 
-    def get_players(self, league, group):
+    def get_players(self, league_type, group):
         players = Players()
 
         for name, info in json.load(open("../members.json")).items():
             seasons = info['group']
 
             try:
-                player_group = seasons[f"{SEASON}/{league}"]
+                player_group = seasons[f"{SEASON}/{league_type}"]
             except KeyError:
                 continue
 
@@ -331,7 +332,7 @@ class Schedule:
             assert all(name in self.players for name in week.requested_off), week.requested_off
             available_names = list(set(self.players.keys()) - set(week.requested_off))
             random.shuffle(available_names)
-            if self.league == "DOUBLES":
+            if self.league_type == "DOUBLES":
                 available_players = list(
                     sorted(
                         list(self.players[n] for n in available_names), 
@@ -416,7 +417,7 @@ class Schedule:
             lines += [f"{player.name} ({player.num_matches} total)"]
             back_to_backs = {}
 
-            if self.league == "SINGLES":
+            if self.league_type == "SINGLES":
                 last_opponent = None
                 last_week = None
                 for week in self.weeks.values():
@@ -503,17 +504,26 @@ class Schedule:
     def get_standings(self, rank_name, fmt):
         return Player.make_table(self.players, rank_name, fmt)
 
+def get_leagues():
+    leagues = []
+    for league_type in ["singles", "doubles"]:
+        for name in os.listdir(league_type):
+            possible_league = os.path.join(league_type, name)
+            if os.path.isdir(possible_league):
+                leagues.append(possible_league)
+
+    return leagues
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("league", choices=["SINGLES", "DOUBLES"])
-    parser.add_argument("group", choices=["3.5", "4.0"])
+    parser.add_argument("league", choices=get_leagues())
     parser.add_argument("--seed", default=0)
     args = parser.parse_args()
 
     random.seed(args.seed)
 
-    schedule = Schedule(args.league, args.group)
+    schedule = Schedule(args.league)
     schedule.fill()
     schedule.save(backup=True)
 
