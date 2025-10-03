@@ -1,6 +1,6 @@
 {'09/24': {'Court 1': [['Don', 'Jason K'], [None, None, True]],
-           'Court 2': [['Hannah', 'Wendy'], [None, None, True]],
-           'Court 3': [['Julie', 'Nirav'], [None, None, True]],
+           'Court 2': [['Hannah', 'Wendy'], [6, 7, True]],
+           'Court 3': [['Julie', 'Nirav'], [7, 5, True]],
            'off': ['Jason V'],
            'requested_off': ['Jason V']},
  '10/01': {'Court 1': [['Jason K', 'Jason V'], [None, None, True]],
