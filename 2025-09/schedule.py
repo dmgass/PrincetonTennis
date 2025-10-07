@@ -218,6 +218,7 @@ class Schedule:
         self.matches_dir = league
         self.matches_filename = f"{self.matches_dir}/matches.py"
         self.players = self.get_players(self.league_type, group)
+        self.subs = self.get_subs(self.league_type, group)
         self.weeks, self.unreported_results, self.results_to_report = self.load(date)
 
     def get_players(self, league_type, group):
@@ -235,6 +236,22 @@ class Schedule:
                 players.add(name, info["nickname"], info["phone"], info["email"])
 
         players.reset(initialize_opponent_counts=True)
+
+        return players
+
+    def get_subs(self, league_type, group):
+        league = f"{SEASON}/{league_type}/{group}"
+
+        players = Players()
+
+        for name, info in json.load(open("../members.json")).items():
+            try:
+                leagues = info['sub']
+            except KeyError:
+                continue
+
+            if league in leagues:
+                players.add(name, info["nickname"], info["phone"], info["email"])
 
         return players
 

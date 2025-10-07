@@ -56,11 +56,17 @@ if args.fmt == "html":
 
     contacts = [f"{player.name}: {player.phone}" for player in schedule.players.values()]
     print("<h2>Contact Info</h2>")
-    if league_type == 'singles':
-        print("Dan Gass: (414) 364-1789 (sub)<br/>")
     print("<br/>\n".join(contacts) + "<br/>")
     print("<br/>")
     print("<br/>")
+
+    subs = [f"{sub.name}: {sub.phone}" for sub in schedule.subs.values()]
+    if subs:
+        print("<h2>Subs</h2>")
+        print("<br/>\n".join(subs) + "<br/>")
+        print("<br/>")
+        print("<br/>")
+
     print(f"https://github.com/dmgass/PrincetonTennis/tree/main/{SEASON}/{args.league}")
 
 else:
