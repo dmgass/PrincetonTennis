@@ -93,6 +93,10 @@ class Player:
         return self.matches_won + self.matches_tied + self.matches_lost
 
     @property
+    def rank_by_nickname(self):
+        return self.nickname
+
+    @property
     def rank_by_match(self):
         return (
             -self.matches_won, 
@@ -117,11 +121,25 @@ class Player:
     header_by_match = (
         "Player", "Won", "Tied", "Lost", "Games Won", "Games Lost", "Makeups")
 
+    header_by_nickname = header_by_match
+
     header_by_games = (
         "Player", "Games Won", "Games Lost", "Matches Won", "Matches Tied", "Matches Lost", "Makeups")
 
     @property
     def cells_by_match(self):
+        return (
+            self.nickname, 
+            self.matches_won, 
+            self.matches_tied, 
+            self.matches_lost, 
+            self.games_won, 
+            self.games_lost, 
+            self.makeups_to_play if self.makeups_to_play else "",
+        )
+
+    @property
+    def cells_by_nickname(self):
         return (
             self.nickname, 
             self.matches_won, 

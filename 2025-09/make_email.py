@@ -45,8 +45,8 @@ if args.fmt == "html":
             print("<h2>Recently Reported Matches</h2>")
             print("<br/>\n".join(schedule.results_to_report))
 
-        print("<h2>Records</h2>")
-        print(schedule.get_standings("by_games", fmt="html"))
+        print("<h2>Match Records</h2>")
+        print(schedule.get_standings("by_nickname", fmt="html"))
 
         print("<h2>Remaining Schedule</h2>")
 
@@ -87,9 +87,9 @@ else:
             print()
             print()
 
-        print("Records")
-        print("=========")
-        print(schedule.get_standings("by_games", fmt="text"))
+        print("Match Records")
+        print("=============")
+        print(schedule.get_standings("by_nickname", fmt="text"))
         print()
         print()
 
