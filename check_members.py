@@ -17,7 +17,10 @@ def check_members(database):
     unique_values = {f: set() for f in UNIQUE_FIELDS}
 
     for name, info in database.items():
-        assert tuple(info.keys()) == FIELDS, f"keys@{name}"
+        fields = list(info)
+        if "sub" in fields:
+            fields.remove("sub")
+        assert tuple(fields) == FIELDS, f"keys@{name}\n{fields}\n{FIELDS}"
         for f in UNIQUE_FIELDS:
             assert info[f] not in unique_values[f], f"{f}@{name} not unique"
             unique_values[f].add(info[f])
