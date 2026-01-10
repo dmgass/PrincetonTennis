@@ -513,11 +513,7 @@ class Schedule:
                 except KeyError:
                     opponents = []
                 row.append(", ".join(opponents))
-            off = list(sorted(week.off))
-            try:
-                off.remove('Trung')
-            except ValueError:
-                pass
+            off = list(sorted(set(week.off + week.requested_off)))
             row.append(", ".join(off))
             rows.append(row)
 
