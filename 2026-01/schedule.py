@@ -513,7 +513,7 @@ class Schedule:
                 except KeyError:
                     opponents = []
                 row.append(", ".join(opponents))
-            off = list(sorted(set(week.off + week.requested_off)))
+            off = list(x for x in sorted(set(week.off + week.requested_off)) if not x.startswith("Sub"))
             row.append(", ".join(off))
             rows.append(row)
 

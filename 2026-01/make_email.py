@@ -25,7 +25,7 @@ day, group = league.split('-')
 title = 'Schedule/Records' if league_type == 'singles' else 'Schedule'
 
 if args.fmt == "html":
-    emails = [player.email for player in schedule.players.values()]
+    emails = [player.email for player in schedule.players.values() if player.email != "n/a"]
     emails.append('bjansen@princetonclub.net')
     if 'dan.gass@gmail.com' not in emails:
         emails.append('dan.gass@gmail.com')
@@ -56,7 +56,7 @@ if args.fmt == "html":
 
     contacts = [f"{player.name}: {player.phone}" for player in schedule.players.values()]
     print("<h2>Contact Info</h2>")
-    print("<br/>\n".join(contacts) + "<br/>")
+    print("<br/>\n".join(c for c in contacts if not c.startswith("Substitute")) + "<br/>")
     print("<br/>")
     print("<br/>")
 
